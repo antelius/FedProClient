@@ -68,7 +68,7 @@
          </manifest>
          <zipfileset dir="${fedproclient_client.output.dir}" includes="**"/>
          <zipfileset dir="${fedproclient_hla_api.output.dir}" includes="**"/>
-         <zipfileset dir="${module.fedproclient_client.basedir}/java/client/resources" includes="**"/>
+         <zipfileset dir="${module.fedproclient_client.basedir}/java/client/src/main/resources" includes="**"/>
          
          <!-- Add dependencies directly to the jar file -->
          <zipfileset dir="${fedproclient_client_abstract.output.dir}" includes="**"/>
@@ -83,7 +83,7 @@
          </manifest>
          <zipfileset dir="${fedproclient_client_evolved.output.dir}" includes="**"/>
          <zipfileset dir="${fedproclient_hla_api.output.dir}" includes="**"/>
-         <zipfileset dir="${module.fedproclient_client_evolved.basedir}/java/client_evolved/resources" includes="**"/>
+         <zipfileset dir="${module.fedproclient_client_evolved.basedir}/java/client_evolved/src/main/resources" includes="**"/>
          
          <!-- Add dependencies directly to the jar file -->
          <zipfileset dir="${fedproclient_client_abstract.output.dir}" includes="**"/>
