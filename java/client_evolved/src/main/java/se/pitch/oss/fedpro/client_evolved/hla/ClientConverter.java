@@ -63,14 +63,6 @@ import java.util.*;
 public class ClientConverter {
    private LogicalTimeFactory _timeFactory;
 
-   public Credentials.Builder convertFromHla(hla.rti1516_202X.auth.Credentials credentials)
-   {
-      Credentials.Builder credentialsBuilder = Credentials.newBuilder();
-      credentialsBuilder.setType(credentials.getType());
-      credentialsBuilder.setData(convertFromHla(credentials.getData()));
-      return credentialsBuilder;
-   }
-
    private static class HandleImpl implements Serializable {
       protected final byte[] _encodedHandle;
 
@@ -462,7 +454,7 @@ public class ClientConverter {
 
       private static int getId(byte[] data)
       {
-         hla.rti1516_202X.encoding.ByteWrapper byteWrapper = new hla.rti1516_202X.encoding.ByteWrapper(data);
+         ByteBuffer byteWrapper = ByteBuffer.wrap(data);
          byteWrapper.getInt();
          return byteWrapper.getInt();
       }
@@ -496,15 +488,6 @@ public class ClientConverter {
       return new JoinResult(
             convertToHla(result.getFederateHandle()),
             convertToHla(result.getLogicalTimeImplementationName()));
-   }
-
-   public hla.rti1516_202X.fedpro.RtiConfiguration.Builder convertFromHla(hla.rti1516_202X.RtiConfiguration rtiConfiguration)
-   {
-      hla.rti1516_202X.fedpro.RtiConfiguration.Builder builder = hla.rti1516_202X.fedpro.RtiConfiguration.newBuilder();
-      builder.setConfigurationName(rtiConfiguration.configurationName());
-      builder.setRtiAddress(rtiConfiguration.rtiAddress());
-      builder.setAdditionalSettings(rtiConfiguration.additionalSettings());
-      return builder;
    }
 
    public hla.rti1516_202X.fedpro.FomModule convertFromHla(se.pitch.oss.fedpro.client_evolved.hla.FomModule fomModule)
