@@ -17,6 +17,7 @@
 package se.pitch.oss.fedpro.common.transport.websockets;
 
 import org.java_websocket.WebSocket;
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -52,7 +53,11 @@ public class WebSocketOutputStream extends OutputStream {
       if (_isClosed.get()) {
          throw new IOException("closed");
       } else {
-         _webSocket.send(b, _clients);
+         try {
+            _webSocket.send(b, _clients);
+         } catch (WebsocketNotConnectedException e) {
+            throw new IOException("not connected", e);
+         }
       }
    }
 

@@ -17,7 +17,6 @@
 package se.pitch.oss.fedpro.client.session;
 
 import net.jcip.annotations.GuardedBy;
-import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import se.pitch.oss.fedpro.client.Transport;
 import se.pitch.oss.fedpro.client.Session;
 import se.pitch.oss.fedpro.client.session.msg.*;
@@ -398,7 +397,7 @@ public class SessionImpl implements Session {
          _messageWriter.setSessionId(_sessionId);
          _socketWriter.setSessionId(_sessionId);
 
-      } catch (IOException | BadMessage | InterruptedException | WebsocketNotConnectedException e) {
+      } catch (IOException | BadMessage | InterruptedException e) {
          // TODO: According to 12.17.4.7.1, Figure 27 in IEEE1516.2-202x_Feb2023.pdf, an IOException here means we should
          //   retry sending the new session request. Does that make sense...?
 
