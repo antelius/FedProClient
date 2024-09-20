@@ -157,7 +157,7 @@
   <path id="library.slf4j-api-2.0.5.classpath">
     <pathelement location="${basedir}/java/lib/slf4j-api-2.0.5.jar"/>
   </path>
-  
+
   <!-- Modules -->
   
   
@@ -208,7 +208,7 @@
   
   <path id="fedproclient_hla_api.module.sourcepath">
     <dirset dir="${module.fedproclient_hla_api.basedir}/java/api">
-      <include name="src"/>
+      <include name="src/main/java"/>
     </dirset>
   </path>
   
@@ -226,7 +226,7 @@
     </javac>
     
     <copy todir="${fedproclient_hla_api.output.dir}">
-      <fileset dir="${module.fedproclient_hla_api.basedir}/java/api/src">
+      <fileset dir="${module.fedproclient_hla_api.basedir}/java/api/src/main/java">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
@@ -292,7 +292,8 @@
   
   <path id="fedproclient_protobuf.module.sourcepath">
     <dirset dir="${module.fedproclient_protobuf.basedir}/java/protobuf">
-      <include name="src/java"/>
+      <include name="src/main/java"/>
+      <include name="src/main/resources"/>
     </dirset>
   </path>
   
@@ -310,7 +311,11 @@
     </javac>
     
     <copy todir="${fedproclient_protobuf.output.dir}">
-      <fileset dir="${module.fedproclient_protobuf.basedir}/java/protobuf/src/java">
+      <fileset dir="${module.fedproclient_protobuf.basedir}/java/protobuf/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.fedproclient_protobuf.basedir}/java/protobuf/src/main/resources">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
@@ -380,7 +385,7 @@
   
   <path id="fedproclient_session.module.sourcepath">
     <dirset dir="${module.fedproclient_session.basedir}/java/session">
-      <include name="src"/>
+      <include name="src/main/java"/>
     </dirset>
   </path>
   
@@ -398,7 +403,7 @@
     </javac>
     
     <copy todir="${fedproclient_session.output.dir}">
-      <fileset dir="${module.fedproclient_session.basedir}/java/session/src">
+      <fileset dir="${module.fedproclient_session.basedir}/java/session/src/main/java">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
@@ -482,7 +487,7 @@
   
   <path id="fedproclient_client_abstract.module.sourcepath">
     <dirset dir="${module.fedproclient_client_abstract.basedir}/java/client_abstract">
-      <include name="src"/>
+      <include name="src/main/java"/>
     </dirset>
   </path>
   
@@ -500,7 +505,7 @@
     </javac>
     
     <copy todir="${fedproclient_client_abstract.output.dir}">
-      <fileset dir="${module.fedproclient_client_abstract.basedir}/java/client_abstract/src">
+      <fileset dir="${module.fedproclient_client_abstract.basedir}/java/client_abstract/src/main/java">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
@@ -594,8 +599,8 @@
   
   <path id="fedproclient_client.module.sourcepath">
     <dirset dir="${module.fedproclient_client.basedir}/java/client">
-      <include name="resources"/>
-      <include name="src"/>
+      <include name="src/main/java"/>
+      <include name="src/main/resources"/>
     </dirset>
   </path>
   
@@ -613,11 +618,11 @@
     </javac>
     
     <copy todir="${fedproclient_client.output.dir}">
-      <fileset dir="${module.fedproclient_client.basedir}/java/client/resources">
+      <fileset dir="${module.fedproclient_client.basedir}/java/client/src/main/java">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
-      <fileset dir="${module.fedproclient_client.basedir}/java/client/src">
+      <fileset dir="${module.fedproclient_client.basedir}/java/client/src/main/resources">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
@@ -711,8 +716,8 @@
   
   <path id="fedproclient_client_evolved.module.sourcepath">
     <dirset dir="${module.fedproclient_client_evolved.basedir}/java/client_evolved">
-      <include name="resources"/>
-      <include name="src"/>
+      <include name="src/main/java"/>
+      <include name="src/main/resources"/>
     </dirset>
   </path>
   
@@ -730,11 +735,11 @@
     </javac>
     
     <copy todir="${fedproclient_client_evolved.output.dir}">
-      <fileset dir="${module.fedproclient_client_evolved.basedir}/java/client_evolved/resources">
+      <fileset dir="${module.fedproclient_client_evolved.basedir}/java/client_evolved/src/main/java">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
-      <fileset dir="${module.fedproclient_client_evolved.basedir}/java/client_evolved/src">
+      <fileset dir="${module.fedproclient_client_evolved.basedir}/java/client_evolved/src/main/resources">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
@@ -810,7 +815,7 @@
   
   <path id="fedproclient_sample.module.sourcepath">
     <dirset dir="${module.fedproclient_sample.basedir}/java/sample">
-      <include name="src"/>
+      <include name="src/main/java"/>
     </dirset>
   </path>
   
@@ -828,7 +833,7 @@
     </javac>
     
     <copy todir="${fedproclient_sample.output.dir}">
-      <fileset dir="${module.fedproclient_sample.basedir}/java/sample/src">
+      <fileset dir="${module.fedproclient_sample.basedir}/java/sample/src/main/java">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
@@ -899,7 +904,7 @@
   
   <path id="fedproclient_sample_evolved.module.sourcepath">
     <dirset dir="${module.fedproclient_sample_evolved.basedir}/java/sample_evolved">
-      <include name="src"/>
+      <include name="src/main/java"/>
     </dirset>
   </path>
   
@@ -917,7 +922,7 @@
     </javac>
     
     <copy todir="${fedproclient_sample_evolved.output.dir}">
-      <fileset dir="${module.fedproclient_sample_evolved.basedir}/java/sample_evolved/src">
+      <fileset dir="${module.fedproclient_sample_evolved.basedir}/java/sample_evolved/src/main/java">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
