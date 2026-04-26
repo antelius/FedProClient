@@ -26,7 +26,7 @@ repositories {
 sourceSets {
     main {
         java {
-            setSrcDirs(listOf("../../client_evolved/src/hla"))
+            setSrcDirs(listOf("src"))
         }
     }
 }
