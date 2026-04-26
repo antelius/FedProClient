@@ -21,6 +21,8 @@ import hla.rti1516_2025.time.*;
 import hla.rti1516_2025.exceptions.*;
 import hla.rti1516_2025.fedpro.CallRequest;
 import hla.rti1516_2025.fedpro.CallResponse;
+import se.pitch.oss.fedpro.client_common.HandleCache;
+import se.pitch.oss.fedpro.client_common.HandleHandleCache;
 
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -6336,34 +6338,39 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       }
    }
 
+   private final HandleCache<FederateHandle> _federateHandleCache = new HandleCache<>();
+
    public CompletableFuture<FederateHandle> asyncGetFederateHandle(
       java.lang.String federateName
    )
    {
-      hla.rti1516_2025.fedpro.GetFederateHandleRequest request;
-      hla.rti1516_2025.fedpro.GetFederateHandleRequest. Builder builder = hla.rti1516_2025.fedpro.GetFederateHandleRequest. newBuilder();
+      return _federateHandleCache.cacheHandle(federateName, name -> {
 
-      try {
-         builder.setFederateName(_clientConverter.convertFromHla(federateName));
-      } catch (Exception e) {
-         return CompletableFuture.failedFuture(e);
-      }
+         hla.rti1516_2025.fedpro.GetFederateHandleRequest request;
+         hla.rti1516_2025.fedpro.GetFederateHandleRequest.Builder builder = hla.rti1516_2025.fedpro.GetFederateHandleRequest.newBuilder();
 
-      request = builder.build();
-      CallRequest callRequest = CallRequest.newBuilder().setGetFederateHandleRequest(request).build();
-
-      return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
          try {
-            if (!callResponse.hasGetFederateHandleResponse()) {
-               throw new RTIinternalError("Mismatched response message. " +
-                  "Got: " + callResponse.getCallResponseCase() + ", " +
-                  "expected " + CallResponse.CallResponseCase.GETFEDERATEHANDLERESPONSE);
-            }
-            hla.rti1516_2025.fedpro.GetFederateHandleResponse response = callResponse.getGetFederateHandleResponse();
-            return _clientConverter.convertToHla(response.getResult());
-        } catch (Exception e) {
-            throw new CompletionException(asRuntimeOrRtiException(e));
+            builder.setFederateName(_clientConverter.convertFromHla(name));
+         } catch (Exception e) {
+            return CompletableFuture.failedFuture(e);
          }
+
+         request = builder.build();
+         CallRequest callRequest = CallRequest.newBuilder().setGetFederateHandleRequest(request).build();
+
+         return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
+            try {
+               if (!callResponse.hasGetFederateHandleResponse()) {
+                  throw new RTIinternalError("Mismatched response message. " +
+                     "Got: " + callResponse.getCallResponseCase() + ", " +
+                     "expected " + CallResponse.CallResponseCase.GETFEDERATEHANDLERESPONSE);
+               }
+               hla.rti1516_2025.fedpro.GetFederateHandleResponse response = callResponse.getGetFederateHandleResponse();
+               return _clientConverter.convertToHla(response.getResult());
+           } catch (Exception e) {
+               throw new CompletionException(asRuntimeOrRtiException(e));
+            }
+         });
       });
    }
 
@@ -6395,6 +6402,11 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       hla.rti1516_2025.FederateHandle federate
    )
    {
+      String name = _federateHandleCache.findHandle(federate);
+      if (name != null) {
+         return CompletableFuture.completedFuture(name);
+      }
+
       hla.rti1516_2025.fedpro.GetFederateNameRequest request;
       hla.rti1516_2025.fedpro.GetFederateNameRequest. Builder builder = hla.rti1516_2025.fedpro.GetFederateNameRequest. newBuilder();
 
@@ -6445,34 +6457,38 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       }
    }
 
+   private final HandleCache<ObjectClassHandle> _objectClassHandleCache = new HandleCache<>();
+
    public CompletableFuture<ObjectClassHandle> asyncGetObjectClassHandle(
       java.lang.String objectClassName
    )
    {
-      hla.rti1516_2025.fedpro.GetObjectClassHandleRequest request;
-      hla.rti1516_2025.fedpro.GetObjectClassHandleRequest. Builder builder = hla.rti1516_2025.fedpro.GetObjectClassHandleRequest. newBuilder();
+      return _objectClassHandleCache.cacheHandle(objectClassName, name -> {
+         hla.rti1516_2025.fedpro.GetObjectClassHandleRequest request;
+         hla.rti1516_2025.fedpro.GetObjectClassHandleRequest.Builder builder = hla.rti1516_2025.fedpro.GetObjectClassHandleRequest.newBuilder();
 
-      try {
-         builder.setObjectClassName(_clientConverter.convertFromHla(objectClassName));
-      } catch (Exception e) {
-         return CompletableFuture.failedFuture(e);
-      }
-
-      request = builder.build();
-      CallRequest callRequest = CallRequest.newBuilder().setGetObjectClassHandleRequest(request).build();
-
-      return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
          try {
-            if (!callResponse.hasGetObjectClassHandleResponse()) {
-               throw new RTIinternalError("Mismatched response message. " +
-                  "Got: " + callResponse.getCallResponseCase() + ", " +
-                  "expected " + CallResponse.CallResponseCase.GETOBJECTCLASSHANDLERESPONSE);
-            }
-            hla.rti1516_2025.fedpro.GetObjectClassHandleResponse response = callResponse.getGetObjectClassHandleResponse();
-            return _clientConverter.convertToHla(response.getResult());
-        } catch (Exception e) {
-            throw new CompletionException(asRuntimeOrRtiException(e));
+            builder.setObjectClassName(_clientConverter.convertFromHla(name));
+         } catch (Exception e) {
+            return CompletableFuture.failedFuture(e);
          }
+
+         request = builder.build();
+         CallRequest callRequest = CallRequest.newBuilder().setGetObjectClassHandleRequest(request).build();
+
+         return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
+            try {
+               if (!callResponse.hasGetObjectClassHandleResponse()) {
+                  throw new RTIinternalError("Mismatched response message. " +
+                        "Got: " + callResponse.getCallResponseCase() + ", " +
+                        "expected " + CallResponse.CallResponseCase.GETOBJECTCLASSHANDLERESPONSE);
+               }
+               hla.rti1516_2025.fedpro.GetObjectClassHandleResponse response = callResponse.getGetObjectClassHandleResponse();
+               return _clientConverter.convertToHla(response.getResult());
+            } catch (Exception e) {
+               throw new CompletionException(asRuntimeOrRtiException(e));
+            }
+         });
       });
    }
 
@@ -6503,6 +6519,11 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       hla.rti1516_2025.ObjectClassHandle objectClass
    )
    {
+      String name = _objectClassHandleCache.findHandle(objectClass);
+      if (name != null) {
+         return CompletableFuture.completedFuture(name);
+      }
+
       hla.rti1516_2025.fedpro.GetObjectClassNameRequest request;
       hla.rti1516_2025.fedpro.GetObjectClassNameRequest. Builder builder = hla.rti1516_2025.fedpro.GetObjectClassNameRequest. newBuilder();
 
@@ -6607,34 +6628,38 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       }
    }
 
+   private final HandleCache<ObjectInstanceHandle> _objectInstanceHandleCache = new HandleCache<>();
+
    public CompletableFuture<ObjectInstanceHandle> asyncGetObjectInstanceHandle(
       java.lang.String objectInstanceName
    )
    {
-      hla.rti1516_2025.fedpro.GetObjectInstanceHandleRequest request;
-      hla.rti1516_2025.fedpro.GetObjectInstanceHandleRequest. Builder builder = hla.rti1516_2025.fedpro.GetObjectInstanceHandleRequest. newBuilder();
+      return _objectInstanceHandleCache.cacheHandle(objectInstanceName, name -> {
+         hla.rti1516_2025.fedpro.GetObjectInstanceHandleRequest request;
+         hla.rti1516_2025.fedpro.GetObjectInstanceHandleRequest.Builder builder = hla.rti1516_2025.fedpro.GetObjectInstanceHandleRequest.newBuilder();
 
-      try {
-         builder.setObjectInstanceName(_clientConverter.convertFromHla(objectInstanceName));
-      } catch (Exception e) {
-         return CompletableFuture.failedFuture(e);
-      }
-
-      request = builder.build();
-      CallRequest callRequest = CallRequest.newBuilder().setGetObjectInstanceHandleRequest(request).build();
-
-      return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
          try {
-            if (!callResponse.hasGetObjectInstanceHandleResponse()) {
-               throw new RTIinternalError("Mismatched response message. " +
-                  "Got: " + callResponse.getCallResponseCase() + ", " +
-                  "expected " + CallResponse.CallResponseCase.GETOBJECTINSTANCEHANDLERESPONSE);
-            }
-            hla.rti1516_2025.fedpro.GetObjectInstanceHandleResponse response = callResponse.getGetObjectInstanceHandleResponse();
-            return _clientConverter.convertToHla(response.getResult());
-        } catch (Exception e) {
-            throw new CompletionException(asRuntimeOrRtiException(e));
+            builder.setObjectInstanceName(_clientConverter.convertFromHla(name));
+         } catch (Exception e) {
+            return CompletableFuture.failedFuture(e);
          }
+
+         request = builder.build();
+         CallRequest callRequest = CallRequest.newBuilder().setGetObjectInstanceHandleRequest(request).build();
+
+         return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
+            try {
+               if (!callResponse.hasGetObjectInstanceHandleResponse()) {
+                  throw new RTIinternalError("Mismatched response message. " +
+                        "Got: " + callResponse.getCallResponseCase() + ", " +
+                        "expected " + CallResponse.CallResponseCase.GETOBJECTINSTANCEHANDLERESPONSE);
+               }
+               hla.rti1516_2025.fedpro.GetObjectInstanceHandleResponse response = callResponse.getGetObjectInstanceHandleResponse();
+               return _clientConverter.convertToHla(response.getResult());
+            } catch (Exception e) {
+               throw new CompletionException(asRuntimeOrRtiException(e));
+            }
+         });
       });
    }
 
@@ -6665,6 +6690,11 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       hla.rti1516_2025.ObjectInstanceHandle objectInstance
    )
    {
+      String name = _objectInstanceHandleCache.findHandle(objectInstance);
+      if (name != null) {
+         return CompletableFuture.completedFuture(name);
+      }
+
       hla.rti1516_2025.fedpro.GetObjectInstanceNameRequest request;
       hla.rti1516_2025.fedpro.GetObjectInstanceNameRequest. Builder builder = hla.rti1516_2025.fedpro.GetObjectInstanceNameRequest. newBuilder();
 
@@ -6718,36 +6748,40 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       }
    }
 
+   private final HandleHandleCache<ObjectClassHandle, AttributeHandle> _attributeHandleCache = new HandleHandleCache<>();
+
    public CompletableFuture<AttributeHandle> asyncGetAttributeHandle(
       hla.rti1516_2025.ObjectClassHandle objectClass,
       java.lang.String attributeName
    )
    {
-      hla.rti1516_2025.fedpro.GetAttributeHandleRequest request;
-      hla.rti1516_2025.fedpro.GetAttributeHandleRequest. Builder builder = hla.rti1516_2025.fedpro.GetAttributeHandleRequest. newBuilder();
+      return _attributeHandleCache.cacheHandle(objectClass, attributeName, (handleClass, name) -> {
+         hla.rti1516_2025.fedpro.GetAttributeHandleRequest request;
+         hla.rti1516_2025.fedpro.GetAttributeHandleRequest.Builder builder = hla.rti1516_2025.fedpro.GetAttributeHandleRequest.newBuilder();
 
-      try {
-         builder.setObjectClass(_clientConverter.convertFromHla(objectClass));
-         builder.setAttributeName(_clientConverter.convertFromHla(attributeName));
-      } catch (Exception e) {
-         return CompletableFuture.failedFuture(e);
-      }
-
-      request = builder.build();
-      CallRequest callRequest = CallRequest.newBuilder().setGetAttributeHandleRequest(request).build();
-
-      return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
          try {
-            if (!callResponse.hasGetAttributeHandleResponse()) {
-               throw new RTIinternalError("Mismatched response message. " +
-                  "Got: " + callResponse.getCallResponseCase() + ", " +
-                  "expected " + CallResponse.CallResponseCase.GETATTRIBUTEHANDLERESPONSE);
-            }
-            hla.rti1516_2025.fedpro.GetAttributeHandleResponse response = callResponse.getGetAttributeHandleResponse();
-            return _clientConverter.convertToHla(response.getResult());
-        } catch (Exception e) {
-            throw new CompletionException(asRuntimeOrRtiException(e));
+            builder.setObjectClass(_clientConverter.convertFromHla(handleClass));
+            builder.setAttributeName(_clientConverter.convertFromHla(name));
+         } catch (Exception e) {
+            return CompletableFuture.failedFuture(e);
          }
+
+         request = builder.build();
+         CallRequest callRequest = CallRequest.newBuilder().setGetAttributeHandleRequest(request).build();
+
+         return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
+            try {
+               if (!callResponse.hasGetAttributeHandleResponse()) {
+                  throw new RTIinternalError("Mismatched response message. " +
+                        "Got: " + callResponse.getCallResponseCase() + ", " +
+                        "expected " + CallResponse.CallResponseCase.GETATTRIBUTEHANDLERESPONSE);
+               }
+               hla.rti1516_2025.fedpro.GetAttributeHandleResponse response = callResponse.getGetAttributeHandleResponse();
+               return _clientConverter.convertToHla(response.getResult());
+            } catch (Exception e) {
+               throw new CompletionException(asRuntimeOrRtiException(e));
+            }
+         });
       });
    }
 
@@ -6783,6 +6817,11 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       hla.rti1516_2025.AttributeHandle attribute
    )
    {
+      String name = _attributeHandleCache.findHandle(objectClass, attribute);
+      if (name != null) {
+         return CompletableFuture.completedFuture(name);
+      }
+
       hla.rti1516_2025.fedpro.GetAttributeNameRequest request;
       hla.rti1516_2025.fedpro.GetAttributeNameRequest. Builder builder = hla.rti1516_2025.fedpro.GetAttributeNameRequest. newBuilder();
 
@@ -6947,34 +6986,38 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       }
    }
 
+   private final HandleCache<InteractionClassHandle> _interactionClassHandleCache = new HandleCache<>();
+
    public CompletableFuture<InteractionClassHandle> asyncGetInteractionClassHandle(
       java.lang.String interactionClassName
    )
    {
-      hla.rti1516_2025.fedpro.GetInteractionClassHandleRequest request;
-      hla.rti1516_2025.fedpro.GetInteractionClassHandleRequest. Builder builder = hla.rti1516_2025.fedpro.GetInteractionClassHandleRequest. newBuilder();
+      return _interactionClassHandleCache.cacheHandle(interactionClassName, name -> {
+         hla.rti1516_2025.fedpro.GetInteractionClassHandleRequest request;
+         hla.rti1516_2025.fedpro.GetInteractionClassHandleRequest.Builder builder = hla.rti1516_2025.fedpro.GetInteractionClassHandleRequest.newBuilder();
 
-      try {
-         builder.setInteractionClassName(_clientConverter.convertFromHla(interactionClassName));
-      } catch (Exception e) {
-         return CompletableFuture.failedFuture(e);
-      }
-
-      request = builder.build();
-      CallRequest callRequest = CallRequest.newBuilder().setGetInteractionClassHandleRequest(request).build();
-
-      return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
          try {
-            if (!callResponse.hasGetInteractionClassHandleResponse()) {
-               throw new RTIinternalError("Mismatched response message. " +
-                  "Got: " + callResponse.getCallResponseCase() + ", " +
-                  "expected " + CallResponse.CallResponseCase.GETINTERACTIONCLASSHANDLERESPONSE);
-            }
-            hla.rti1516_2025.fedpro.GetInteractionClassHandleResponse response = callResponse.getGetInteractionClassHandleResponse();
-            return _clientConverter.convertToHla(response.getResult());
-        } catch (Exception e) {
-            throw new CompletionException(asRuntimeOrRtiException(e));
+            builder.setInteractionClassName(_clientConverter.convertFromHla(name));
+         } catch (Exception e) {
+            return CompletableFuture.failedFuture(e);
          }
+
+         request = builder.build();
+         CallRequest callRequest = CallRequest.newBuilder().setGetInteractionClassHandleRequest(request).build();
+
+         return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
+            try {
+               if (!callResponse.hasGetInteractionClassHandleResponse()) {
+                  throw new RTIinternalError("Mismatched response message. " +
+                        "Got: " + callResponse.getCallResponseCase() + ", " +
+                        "expected " + CallResponse.CallResponseCase.GETINTERACTIONCLASSHANDLERESPONSE);
+               }
+               hla.rti1516_2025.fedpro.GetInteractionClassHandleResponse response = callResponse.getGetInteractionClassHandleResponse();
+               return _clientConverter.convertToHla(response.getResult());
+            } catch (Exception e) {
+               throw new CompletionException(asRuntimeOrRtiException(e));
+            }
+         });
       });
    }
 
@@ -7005,6 +7048,11 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       hla.rti1516_2025.InteractionClassHandle interactionClass
    )
    {
+      String name = _interactionClassHandleCache.findHandle(interactionClass);
+      if (name != null) {
+         return CompletableFuture.completedFuture(name);
+      }
+
       hla.rti1516_2025.fedpro.GetInteractionClassNameRequest request;
       hla.rti1516_2025.fedpro.GetInteractionClassNameRequest. Builder builder = hla.rti1516_2025.fedpro.GetInteractionClassNameRequest. newBuilder();
 
@@ -7058,36 +7106,40 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       }
    }
 
+   private final HandleHandleCache<InteractionClassHandle, ParameterHandle> _parameterHandleCache = new HandleHandleCache<>();
+
    public CompletableFuture<ParameterHandle> asyncGetParameterHandle(
       hla.rti1516_2025.InteractionClassHandle interactionClass,
       java.lang.String parameterName
    )
    {
-      hla.rti1516_2025.fedpro.GetParameterHandleRequest request;
-      hla.rti1516_2025.fedpro.GetParameterHandleRequest. Builder builder = hla.rti1516_2025.fedpro.GetParameterHandleRequest. newBuilder();
+      return _parameterHandleCache.cacheHandle(interactionClass, parameterName, (handleClass, name) -> {
+         hla.rti1516_2025.fedpro.GetParameterHandleRequest request;
+         hla.rti1516_2025.fedpro.GetParameterHandleRequest.Builder builder = hla.rti1516_2025.fedpro.GetParameterHandleRequest.newBuilder();
 
-      try {
-         builder.setInteractionClass(_clientConverter.convertFromHla(interactionClass));
-         builder.setParameterName(_clientConverter.convertFromHla(parameterName));
-      } catch (Exception e) {
-         return CompletableFuture.failedFuture(e);
-      }
-
-      request = builder.build();
-      CallRequest callRequest = CallRequest.newBuilder().setGetParameterHandleRequest(request).build();
-
-      return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
          try {
-            if (!callResponse.hasGetParameterHandleResponse()) {
-               throw new RTIinternalError("Mismatched response message. " +
-                  "Got: " + callResponse.getCallResponseCase() + ", " +
-                  "expected " + CallResponse.CallResponseCase.GETPARAMETERHANDLERESPONSE);
-            }
-            hla.rti1516_2025.fedpro.GetParameterHandleResponse response = callResponse.getGetParameterHandleResponse();
-            return _clientConverter.convertToHla(response.getResult());
-        } catch (Exception e) {
-            throw new CompletionException(asRuntimeOrRtiException(e));
+            builder.setInteractionClass(_clientConverter.convertFromHla(handleClass));
+            builder.setParameterName(_clientConverter.convertFromHla(name));
+         } catch (Exception e) {
+            return CompletableFuture.failedFuture(e);
          }
+
+         request = builder.build();
+         CallRequest callRequest = CallRequest.newBuilder().setGetParameterHandleRequest(request).build();
+
+         return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
+            try {
+               if (!callResponse.hasGetParameterHandleResponse()) {
+                  throw new RTIinternalError("Mismatched response message. " +
+                        "Got: " + callResponse.getCallResponseCase() + ", " +
+                        "expected " + CallResponse.CallResponseCase.GETPARAMETERHANDLERESPONSE);
+               }
+               hla.rti1516_2025.fedpro.GetParameterHandleResponse response = callResponse.getGetParameterHandleResponse();
+               return _clientConverter.convertToHla(response.getResult());
+            } catch (Exception e) {
+               throw new CompletionException(asRuntimeOrRtiException(e));
+            }
+         });
       });
    }
 
@@ -7123,6 +7175,11 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       hla.rti1516_2025.ParameterHandle parameter
    )
    {
+      String name = _parameterHandleCache.findHandle(interactionClass, parameter);
+      if (name != null) {
+         return CompletableFuture.completedFuture(name);
+      }
+
       hla.rti1516_2025.fedpro.GetParameterNameRequest request;
       hla.rti1516_2025.fedpro.GetParameterNameRequest. Builder builder = hla.rti1516_2025.fedpro.GetParameterNameRequest. newBuilder();
 
@@ -7498,34 +7555,38 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       }
    }
 
+   private final HandleCache<DimensionHandle> _dimensionHandleCache = new HandleCache<>();
+
    public CompletableFuture<DimensionHandle> asyncGetDimensionHandle(
       java.lang.String dimensionName
    )
    {
-      hla.rti1516_2025.fedpro.GetDimensionHandleRequest request;
-      hla.rti1516_2025.fedpro.GetDimensionHandleRequest. Builder builder = hla.rti1516_2025.fedpro.GetDimensionHandleRequest. newBuilder();
+      return _dimensionHandleCache.cacheHandle(dimensionName, name -> {
+         hla.rti1516_2025.fedpro.GetDimensionHandleRequest request;
+         hla.rti1516_2025.fedpro.GetDimensionHandleRequest.Builder builder = hla.rti1516_2025.fedpro.GetDimensionHandleRequest.newBuilder();
 
-      try {
-         builder.setDimensionName(_clientConverter.convertFromHla(dimensionName));
-      } catch (Exception e) {
-         return CompletableFuture.failedFuture(e);
-      }
-
-      request = builder.build();
-      CallRequest callRequest = CallRequest.newBuilder().setGetDimensionHandleRequest(request).build();
-
-      return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
          try {
-            if (!callResponse.hasGetDimensionHandleResponse()) {
-               throw new RTIinternalError("Mismatched response message. " +
-                  "Got: " + callResponse.getCallResponseCase() + ", " +
-                  "expected " + CallResponse.CallResponseCase.GETDIMENSIONHANDLERESPONSE);
-            }
-            hla.rti1516_2025.fedpro.GetDimensionHandleResponse response = callResponse.getGetDimensionHandleResponse();
-            return _clientConverter.convertToHla(response.getResult());
-        } catch (Exception e) {
-            throw new CompletionException(asRuntimeOrRtiException(e));
+            builder.setDimensionName(_clientConverter.convertFromHla(name));
+         } catch (Exception e) {
+            return CompletableFuture.failedFuture(e);
          }
+
+         request = builder.build();
+         CallRequest callRequest = CallRequest.newBuilder().setGetDimensionHandleRequest(request).build();
+
+         return doAsyncHlaCall(callRequest).thenApply(callResponse -> {
+            try {
+               if (!callResponse.hasGetDimensionHandleResponse()) {
+                  throw new RTIinternalError("Mismatched response message. " +
+                        "Got: " + callResponse.getCallResponseCase() + ", " +
+                        "expected " + CallResponse.CallResponseCase.GETDIMENSIONHANDLERESPONSE);
+               }
+               hla.rti1516_2025.fedpro.GetDimensionHandleResponse response = callResponse.getGetDimensionHandleResponse();
+               return _clientConverter.convertToHla(response.getResult());
+            } catch (Exception e) {
+               throw new CompletionException(asRuntimeOrRtiException(e));
+            }
+         });
       });
    }
 
@@ -7556,6 +7617,11 @@ public class RTIambassadorClient extends RTIambassadorClientHla4Base
       hla.rti1516_2025.DimensionHandle dimension
    )
    {
+      String name = _dimensionHandleCache.findHandle(dimension);
+      if (name != null) {
+         return CompletableFuture.completedFuture(name);
+      }
+
       hla.rti1516_2025.fedpro.GetDimensionNameRequest request;
       hla.rti1516_2025.fedpro.GetDimensionNameRequest. Builder builder = hla.rti1516_2025.fedpro.GetDimensionNameRequest. newBuilder();
 
