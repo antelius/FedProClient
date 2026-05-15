@@ -44,6 +44,8 @@ jobs:
     - name: Prepare JAR Artifact
       run: |
         mkdir -p ./staging
+        cp java/api/HLA1516-2010/build/libs/HLA1516-2010.jar     ./staging/hla-evolved-api.jar
+        cp java/api/HLA1516-2025/build/libs/HLA1516-2025.jar     ./staging/hla-4-api.jar
         cp java/client/build/libs/client.jar                     ./staging/fedpro-client.jar
         cp java/client_common/build/libs/client_common.jar       ./staging/fedpro-client-common.jar
         cp java/client_evolved/build/libs/client_evolved.jar     ./staging/fedpro-client-hla-evolved.jar
