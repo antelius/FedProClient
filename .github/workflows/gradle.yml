@@ -41,11 +41,20 @@ jobs:
       working-directory: java/
       run: ./gradlew build
 
+    - name: Prepare JAR Artifact
+      run: |
+        mkdir -p ./staging
+        cp java/client/build/libs/client.jar                     ./staging/fedpro-client.jar
+        cp java/client_common/build/libs/client_common.jar       ./staging/fedpro-client-common.jar
+        cp java/client_evolved/build/libs/client_evolved.jar     ./staging/fedpro-client-hla-evolved.jar
+        cp java/protobuf/build/libs/protobuf.jar                 ./staging/fedpro-protobuf.jar
+        cp java/session/build/libs/session.jar                   ./staging/fedpro-session.jar
+
     - name: Upload JAR Artifact
       uses: actions/upload-artifact@v4
       with:
         name: fedpro-client-jar
-        path: java/*/build/libs/*.jar
+        path: staging
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
