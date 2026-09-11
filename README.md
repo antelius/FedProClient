@@ -49,6 +49,48 @@ To use the client with an existing federate application:
 * Locate the relevant library flavor (Debug or Release, HLA Evolved or 4),
 * Copy the library files in the same directory as the federate executable.
 
+## Handle Cache
+
+With the handle cache we can optimistically fetch all handles asynchronously early on and then keep the normal handle logic in place. 
+
+If the have a method like this:
+```
+   private void fetchHandles(RTIambassador rtiAmbassador, Map<String, List<String>> objects, Map<String, List<String>> interactions) {
+      if (rtiAmbassador instanceof RTIambassadorEx) {
+         AsyncRTIambassador async = ((RTIambassadorEx) rtiAmbassador).async();
+         for (Map.Entry<String, List<String>> entry : objects.entrySet()) {
+            async.getObjectClassHandle(entry.getKey()).whenComplete((handle, __) -> {
+               if (handle != null) {
+                  for (String attribute : entry.getValue()) {
+                     async.getAttributeHandle(handle, attribute);
+                  }
+               }
+            });
+         }
+         for (Map.Entry<String, List<String>> entry : interactions.entrySet()) {
+            async.getInteractionClassHandle(entry.getKey()).whenComplete((handle, __) -> {
+               if (handle != null) {
+                  for (String paramter : entry.getValue()) {
+                     async.getParameterHandle(handle, paramter);
+                  }
+               }
+            });
+         }
+      }
+   }
+```
+
+We can use it early in the startup like this:
+```
+      _rtiAmbassador.joinFederationExecution("Chat", FEDERATION_NAME, new String[] {fddFile.getPath()});
+
+      fetchHandles(_rtiAmbassador,
+            Map.of("Participant", List.of("Name")),
+            Map.of("Communication", List.of("Message", "Sender")));
+```
+This will populate the cache and speed up the remaining startup.
+
+
 ## Further reading
 
 * [Build instructions for Java](java/README.md#building)
